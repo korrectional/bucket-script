@@ -19,10 +19,7 @@
     bucket-script delete notes.txt
 #>
 
-param(
-    [Parameter(ValueFromRemainingArguments = $true)]
-    [string[]]$ScriptArgs
-)
+
 
 # Ensure TLS 1.2 is enabled for older Windows PowerShell 5.1 environments
 try {
@@ -892,7 +889,7 @@ function Invoke-Delete($cfg, $opts) {
 # Entry Point
 # ------------------------------------------------------------------------------
 
-$rawArgs = if ($ScriptArgs) { $ScriptArgs } else { @() }
+$rawArgs = if ($args) { $args } else { @() }
 $options = Parse-CommandLineArgs $rawArgs
 $config = Load-AppConfig
 
