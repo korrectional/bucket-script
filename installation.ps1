@@ -82,7 +82,7 @@ foreach ($fileName in $filesToCopy) {
     $srcPath = Join-Path $sourceDir $fileName
     if (Test-Path -LiteralPath $srcPath) {
         $destPath = Join-Path $binDir $fileName
-        Copy-Item -LiteralPath $srcPath -Destination $destPath -Force
+        [System.IO.File]::Copy($srcPath, $destPath, $true)
         Write-Host ("  [+] Copied: " + $fileName) -ForegroundColor Green
         $copiedCount++
     } else {
@@ -96,8 +96,8 @@ if ($copiedCount -eq 0) {
 }
 
 # 4. Permanently add binDir to Windows User PATH environment variable
-$isWindows = ($IsWindows -eq $true) -or ([System.Environment]::OSVersion.Platform -match "Win")
-if ($isWindows) {
+$runningOnWindows = ($IsWindows -eq $true) -or ([System.Environment]::OSVersion.Platform -match "Win")
+if ($runningOnWindows) {
     try {
         $userPath = [System.Environment]::GetEnvironmentVariable("Path", "User")
         $pathSegments = if ($userPath) { $userPath -split ';' } else { @() }

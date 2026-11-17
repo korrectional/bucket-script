@@ -1,0 +1,25 @@
+# Configuration and credentials
+config.json
+.bucket-script/
+.env
+*.key
+*.token
+
+# Local tools and caches
+.tools/
+.pytest_cache/
+__pycache__/
+
+# Temporary files and logs
+*.tmp
+*~
+*.log
+test_*.txt
+downloaded_*.txt
+by_id.txt
+sample_*.txt
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
