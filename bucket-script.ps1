@@ -883,7 +883,11 @@ function Invoke-Delete($cfg, $opts) {
 # Entry Point
 # ------------------------------------------------------------------------------
 
-$options = Parse-CommandLineArgs $args
+$rawArgs = if ($ScriptArgs) { $ScriptArgs } else { @() }
+Write-Host "DEBUG: ScriptArgs type: $($rawArgs.GetType().FullName)"
+Write-Host "DEBUG: ScriptArgs count: $($rawArgs.Count)"
+Write-Host "DEBUG: ScriptArgs[0]: $($rawArgs[0])"
+$options = Parse-CommandLineArgs $rawArgs
 $config = Load-AppConfig
 
 switch ($options.Command) {
