@@ -218,6 +218,15 @@ function Handle-HttpError([System.Net.Http.HttpResponseMessage]$response, [strin
 # ------------------------------------------------------------------------------
 
 function Parse-CommandLineArgs($rawArgs) {
+    $tokens = [System.Collections.Generic.List[string]]::new()
+    if ($null -ne $rawArgs) {
+        foreach ($item in $rawArgs) {
+            if ($null -ne $item) {
+                $tokens.Add([string]$item)
+            }
+        }
+    }
+
     $options = @{
         Command    = ""
         Target     = ""
@@ -231,18 +240,18 @@ function Parse-CommandLineArgs($rawArgs) {
     }
 
     $i = 0
-    while ($i -lt $rawArgs.Count) {
-        $arg = [string]$rawArgs[$i]
+    while ($i -lt $tokens.Count) {
+        $arg = $tokens[$i]
         if ($arg -match '^(?:--|-)(name|n)$') {
             $i++
-            if ($i -lt $rawArgs.Count) { $options.Name = [string]$rawArgs[$i] }
+            if ($i -lt $tokens.Count) { $options.Name = $tokens[$i] }
         }
         elseif ($arg -match '^(?:--|-)(name|n)=(.*)$') {
             $options.Name = $matches[2]
         }
         elseif ($arg -match '^(?:--|-)(out|output|o)$') {
             $i++
-            if ($i -lt $rawArgs.Count) { $options.Out = [string]$rawArgs[$i] }
+            if ($i -lt $tokens.Count) { $options.Out = $tokens[$i] }
         }
         elseif ($arg -match '^(?:--|-)(out|output|o)=(.*)$') {
             $options.Out = $matches[2]
@@ -252,21 +261,21 @@ function Parse-CommandLineArgs($rawArgs) {
         }
         elseif ($arg -match '^(?:--|-)(api-key|apikey|key)$') {
             $i++
-            if ($i -lt $rawArgs.Count) { $options.ApiKey = [string]$rawArgs[$i] }
+            if ($i -lt $tokens.Count) { $options.ApiKey = $tokens[$i] }
         }
         elseif ($arg -match '^(?:--|-)(api-key|apikey|key)=(.*)$') {
             $options.ApiKey = $matches[2]
         }
         elseif ($arg -match '^(?:--|-)(url|base-url|baseurl)$') {
             $i++
-            if ($i -lt $rawArgs.Count) { $options.Url = [string]$rawArgs[$i] }
+            if ($i -lt $tokens.Count) { $options.Url = $tokens[$i] }
         }
         elseif ($arg -match '^(?:--|-)(url|base-url|baseurl)=(.*)$') {
             $options.Url = $matches[2]
         }
         elseif ($arg -match '^(?:--|-)(subfolder|folder)$') {
             $i++
-            if ($i -lt $rawArgs.Count) { $options.Subfolder = [string]$rawArgs[$i] }
+            if ($i -lt $tokens.Count) { $options.Subfolder = $tokens[$i] }
         }
         elseif ($arg -match '^(?:--|-)(subfolder|folder)=(.*)$') {
             $options.Subfolder = $matches[2]
@@ -884,9 +893,6 @@ function Invoke-Delete($cfg, $opts) {
 # ------------------------------------------------------------------------------
 
 $rawArgs = if ($ScriptArgs) { $ScriptArgs } else { @() }
-Write-Host "DEBUG: ScriptArgs type: $($rawArgs.GetType().FullName)"
-Write-Host "DEBUG: ScriptArgs count: $($rawArgs.Count)"
-Write-Host "DEBUG: ScriptArgs[0]: $($rawArgs[0])"
 $options = Parse-CommandLineArgs $rawArgs
 $config = Load-AppConfig
 
