@@ -19,8 +19,10 @@
     bucket-script delete notes.txt
 #>
 
-[CmdletBinding()]
-param()
+param(
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [string[]]$ScriptArgs
+)
 
 # Ensure TLS 1.2 is enabled for older Windows PowerShell 5.1 environments
 try {
